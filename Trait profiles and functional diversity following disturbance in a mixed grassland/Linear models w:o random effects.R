@@ -180,7 +180,7 @@ library(egg)
 
 ### 2020 Functional Diversity Indices ###
 
-### RUNNING LM FOR NORMALIZED FRIC ###
+### LM FOR NORMALIZED FRIC ###
 FRic.LM.2020 <- lm(Fric_Tansformed~Disturbance, data=fdiv.2020)
 summary(FRic.LM.2020)
 # Checking residuals are normally distributed
@@ -189,25 +189,7 @@ qqline(resid(FRic.LM.2020))
 # Checking normality of distribution
 ks.test(resid(FRic.LM.2020),"pnorm",mean=mean(resid(FRic.LM.2020)),sd=sd(resid(FRic.LM.2020))) 
 
-### RUNNING LM FOR FDIV ###
-FDiv.LM.2020 <- lm(FDiv~Disturbance, data=fdiv.2020)
-summary(FDiv.LM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(FDiv.LM.2020))
-qqline(resid(FDiv.LM.2020))
-# Checking normality of distribution
-ks.test(resid(FDiv.LM.2020),"pnorm",mean=mean(resid(FDiv.LM.2020)),sd=sd(resid(FDiv.LM.2020))) 
-
-### RUNNING LM FOR FDIS ###
-FDis.LM.2020 <- lm(FDis~Disturbance, data=fdiv.2020)
-summary(FDis.LM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(FDis.LM.2020))
-qqline(resid(FDis.LM.2020))
-# Checking normality of distribution
-ks.test(resid(FDis.LM.2020),"pnorm",mean=mean(resid(FDis.LM.2020)),sd=sd(resid(FDis.LM.2020))) 
-
-### RUNNING LM FOR FEVE ###
+### LM FOR FEVE ###
 FEve.LM.2020 <- lm(FEve~Disturbance, data=fdiv.2020)
 summary(FEve.LM.2020)
 # Checking residuals are normally distributed
@@ -216,7 +198,16 @@ qqline(resid(FEve.LM.2020))
 # Checking normality of distribution
 ks.test(resid(FEve.LM.2020),"pnorm",mean=mean(resid(FEve.LM.2020)),sd=sd(resid(FEve.LM.2020))) 
 
-### RUNNING LM FOR RAOQ ###
+### LM FOR FDIV ###
+FDiv.LM.2020 <- lm(FDiv~Disturbance, data=fdiv.2020)
+summary(FDiv.LM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(FDiv.LM.2020))
+qqline(resid(FDiv.LM.2020))
+# Checking normality of distribution
+ks.test(resid(FDiv.LM.2020),"pnorm",mean=mean(resid(FDiv.LM.2020)),sd=sd(resid(FDiv.LM.2020))) 
+
+### LM FOR RAOQ ###
 RaoQ.LM.2020 <- lm(RaoQ~Disturbance, data=fdiv.2020)
 summary(RaoQ.LM.2020)
 # Checking residuals are normally distributed
@@ -226,7 +217,7 @@ qqline(resid(RaoQ.LM.2020))
 ks.test(resid(RaoQ.LM.2020),"pnorm",mean=mean(resid(RaoQ.LM.2020)),sd=sd(resid(RaoQ.LM.2020)))
 
 ### 2020 Community Weighted Mean Traits ###
-### RUNNING LM FOR MAX HEIGHT ###
+### LM FOR MAX HEIGHT ###
 Max.Height.LM.2020 <- lm(Max.Height~Disturbance, data=CWM.2020)
 summary(Max.Height.LM.2020)
 # Checking residuals are normally distributed
@@ -235,7 +226,7 @@ qqline(resid(Max.Height.LM.2020))
 # Checking normality of distribution
 ks.test(resid(Max.Height.LM.2020),"pnorm",mean=mean(resid(Max.Height.LM.2020)),sd=sd(resid(Max.Height.LM.2020)))
 
-### RUNNING LM FOR SPECIFIC LEAF AREA ###
+### LM FOR SPECIFIC LEAF AREA ###
 SLA.Leaf.LM.2020 <- lm(SLA.Leaf~Disturbance, data=CWM.2020)
 summary(SLA.Leaf.LM.2020)
 # Checking residuals are normally distributed
@@ -252,15 +243,6 @@ qqnorm(resid(SRL.LM.2020))
 qqline(resid(SRL.LM.2020))
 # Checking normality of distribution
 ks.test(resid(SRL.LM.2020),"pnorm",mean=mean(resid(SRL.LM.2020)),sd=sd(resid(SRL.LM.2020)))
-
-### RUNNING LM FOR CANOPY WIDTH ###
-Canopy.W1.LM.2020 <- lm(Canopy.W1.Transformed~Disturbance, data=CWM.2020)
-summary(Canopy.W1.LM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(Canopy.W1.LM.2020))
-qqline(resid(Canopy.W1.LM.2020))
-# Checking normality of distribution
-ks.test(resid(Canopy.W1.LM.2020),"pnorm",mean=mean(resid(Canopy.W1.LM.2020)),sd=sd(resid(Canopy.W1.LM.2020)))
 
 ### RUNNING LM FOR LEAF NITROGEN CONTENT ###  
 N.shoot.LM.2020 <- lm(N.shoot~Disturbance, data=CWM.2020)

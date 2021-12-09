@@ -546,35 +546,28 @@ library(egg)
 
 ### 2020 Functional Diversity Indices ###
 
-### RUNNING LMM FOR NORMALIZED FRIC ###
+### LMM FOR NORMALIZED FRIC ###
 FRic.LMM.2020 <- lmer(Fric_Tansformed~Disturbance+(1|Site), data=fdiv.2020)
 summary(FRic.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(FRic.LMM.2020))
 qqline(resid(FRic.LMM.2020))
 
-### RUNNING LMM FOR FDIV ###
-FDiv.LMM.2020 <- lmer(FDiv~Disturbance+(1|Site), data=fdiv.2020)
-summary(FDiv.LMM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(FDiv.LMM.2020))
-qqline(resid(FDiv.LMM.2020))
-
-### RUNNING LMM FOR FDIS ###
-FDis.LMM.2020 <- lmer(FDis~Disturbance+(1|Site), data=fdiv.2020)
-summary(FDis.LMM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(FDis.LMM.2020))
-qqline(resid(FDis.LMM.2020))
-
-### RUNNING LMM FOR FEVE ###
+### LMM FOR FEVE ###
 FEve.LMM.2020 <- lmer(FEve~Disturbance+(1|Site), data=fdiv.2020)
 summary(FEve.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(FEve.LMM.2020))
 qqline(resid(FEve.LMM.2020))
 
-### RUNNING LMM FOR RAOQ ###
+### LMM FOR FDIV ###
+FDiv.LMM.2020 <- lmer(FDiv~Disturbance+(1|Site), data=fdiv.2020)
+summary(FDiv.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(FDiv.LMM.2020))
+qqline(resid(FDiv.LMM.2020))
+
+### LMM FOR RAOQ ###
 RaoQ.LMM.2020 <- lmer(RaoQ~Disturbance+(1|Site), data=fdiv.2020)
 summary(RaoQ.LMM.2020)
 # Checking residuals are normally distributed
@@ -583,42 +576,35 @@ qqline(resid(RaoQ.LMM.2020))
 
 ### 2020 Community Weighted Mean Traits ###
 
-### RUNNING LMM FOR MAX HEIGHT ###
+### LMM FOR MAX HEIGHT ###
 Max.Height.LMM.2020 <- lmer(Max.Height~Disturbance+(1|Site), data=CWM.2020)
 summary(Max.Height.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(Max.Height.LMM.2020))
 qqline(resid(Max.Height.LMM.2020))
 
-### RUNNING LMM FOR SPECIFIC LEAF AREA ###
+### LMM FOR SPECIFIC LEAF AREA ###
 SLA.Leaf.LMM.2020 <- lmer(SLA.Leaf~Disturbance+(1|Site), data=CWM.2020)
 summary(SLA.Leaf.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(SLA.Leaf.LMM.2020))
 qqline(resid(SLA.Leaf.LMM.2020))
 
-### RUNNING LMM FOR SPECIFIC ROOT LENGTH ###
+### LMM FOR SPECIFIC ROOT LENGTH ###
 SRL.LMM.2020 <- lmer(SRL~Disturbance+(1|Site), data=CWM.2020)
 summary(SRL.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(SRL.LMM.2020))
 qqline(resid(SRL.LMM.2020))
 
-### RUNNING LMM FOR CANOPY WIDTH ###
-Canopy.W1.LMM.2020 <- lmer(Canopy.W1.Transformed~Disturbance+(1|Site), data=CWM.2020)
-summary(Canopy.W1.LMM.2020)
-# Checking residuals are normally distributed
-qqnorm(resid(Canopy.W1.LMM.2020))
-qqline(resid(Canopy.W1.LMM.2020))
-
-### RUNNING LMM FOR LEAF NITROGEN CONTENT ###  
+### LMM FOR LEAF NITROGEN CONTENT ###  
 N.shoot.LMM.2020 <- lmer(N.shoot~Disturbance+(1|Site), data=CWM.2020)
 summary(N.shoot.LMM.2020)
 # Checking residuals are normally distributed
 qqnorm(resid(N.shoot.LMM.2020))
 qqline(resid(N.shoot.LMM.2020))
 
-### RUNNING LMM FOR ROOT NITROGEN CONTENT ###  
+### LMM FOR ROOT NITROGEN CONTENT ###  
 N.root.LMM.2020 <- lmer(N.root~Disturbance+(1|Site), data=CWM.2020)
 summary(N.root.LMM.2020)
 # Checking residuals are normally distributed
