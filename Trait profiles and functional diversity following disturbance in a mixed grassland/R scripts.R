@@ -1,3 +1,5 @@
+setwd("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland")
+
 install.packages(c("tidyverse", "dslabs", "vegan","ggplot2", "readxl"))
 
 library("tidyverse")
@@ -485,7 +487,7 @@ traits <- subset(traits, rownames(traits) %in% colnames(abundance_data.2020)) # 
 traits <- traits[order(match(rownames(traits), colnames(weights))), ] # Make sure the two data frames are in the same order
 
 ### removed species with no kinsella trait data from weights #not working yet
-weights <- weights %>% select (-c(Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1))
+weights <- weights %>% dplyr::select (-c(Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1))
 
 ### calculate fdiv
 fdiv_results.2020 <- dbFD(traits, weights, stand.x=TRUE, corr="none") # Calculate diversity. "stand.x=TRUE" standardizes traits to mean 0 and unit variance.
@@ -643,6 +645,7 @@ pEve <- ggplot(FEve_DataFrame.2020, aes(x= Subplot, y= AvgFEve, fill = Subplot))
   theme_classic() + 
   theme(axis.text = element_text(color = "black"))+
   theme(legend.position = "none")
+pEve
 
 ### Making an FDiv data frame
 FDiv_ANR <- fdiv.2020$FDiv[seq(1, 24, 2)]
@@ -663,7 +666,7 @@ pDiv <- ggplot(FDiv_DataFrame.2020, aes(x= Subplot, y= AvgFDiv, fill = Subplot))
   theme_classic() + 
   theme(axis.text = element_text(color = "black"))+
   theme(legend.position = "none")
-
+pDiv
 
 ### Making an FRic data frame (transformed)
 FRic_ANR <- fdiv.2020$Fric_Tansformed[seq(1, 24, 2)]
