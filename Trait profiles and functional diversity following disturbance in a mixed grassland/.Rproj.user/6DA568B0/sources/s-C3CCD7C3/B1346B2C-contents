@@ -1,9 +1,10 @@
+setwd("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland")
+
 install.packages(c("tidyverse", "dslabs", "vegan","ggplot2", "readxl"))
 
 library("tidyverse")
 library("dslabs")
 library("vegan")
-library("readxl")
 library("ggplot2")
 
 ####2020 & 2018 Evenness####
@@ -126,7 +127,7 @@ Avg_ANR_R2020 <- mean(c(ANR2_R, ANR3_R, ANR4_R, ANR5_R, ANR6_R, ANR7_R, ANR11_R,
 
 StDev_ANR_R2020 <- sd(c(ANR2_R, ANR3_R, ANR4_R, ANR5_R, ANR6_R, ANR7_R, ANR11_R, ANR12_R, ANR14_R, ANR15_R, ANR16_R, ANR17_R))
 
-### trying to extract richness for each nnr2 subplot
+### extract richness for each nnr2 subplot
 
 NNR2_R <- specnumber(community_2020$NNR2..Undist..2)
 NNR3_R <- specnumber(community_2020$NNR2..Undist..3)
@@ -218,7 +219,7 @@ is.nan.data.frame <- function(x){
 
 ####2018 Data prep####
 # a) Import trait information
-data_traits <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Data files/Traits_Raw.csv",na.strings=c("NA",""))
+data_traits <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland/Traits_Raw.csv",na.strings=c("NA",""))
 data_traits[,c("SpecimenID", "SppCode", "Collector", "Date.collected", "MicrositeID", "flag", "Notes")] <- NULL # Remove metadata I don't need
 data_traits[,c("Family","Genus","Species")] <- NULL # Remove taxonomy data I don't need (saved separately anyway)
 data_traits[,c("CN.sampleID", "Soil.pH", "pH.Temp", "pH.SoilWeight")] <- NULL # Remove?? extra data that's not really a trait
@@ -243,7 +244,7 @@ data_traits[is.nan(data_traits)] <- NA
 
 
 #Import 2018 abundance data
-abundance_data.2018 <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Data files/AbundanceData2018.csv", na.strings=c("NA",""))
+abundance_data.2018 <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland/AbundanceData2018.csv", na.strings=c("NA",""))
 abundance_data.2018 <- abundance_data.2018 %>% filter(Community != "N/A")
 abundance_data.2018["Community"] <- NULL
 View(abundance_data.2018)
@@ -293,10 +294,9 @@ data_traits.avg.all <- data_traits.outlier.rm %>%
   as.data.frame() 
 data_traits.avg.all[is.nan(data_traits.avg.all)] <- NA
 
-####Em's note: having trouble here.####
-# Are there any species in the cover data that are NOT in the trait data? Agscom, Collin, Genama, Penpro, Silvery.hairy.mustard, "Weed.1" 
-df <- data.frame(Epithey = colnames(abundance_data),
-                 Trait = colnames(abundance_data) %in% data_traits.avg.all$Epithey)
+# Are there any species in the cover data that are NOT in the trait data?
+df <- data.frame(Epithey = colnames(abundance_data.2018),
+                 Trait = colnames(abundance_data.2018) %in% data_traits.avg.all$Epithey)
 print(as.character(subset(df, Trait=="FALSE")$Epithey)) # There is no trait data for these taxa.
 
 rm(df)
@@ -310,15 +310,14 @@ data_traits.avg.Kin <- data_traits.avg.Kin %>%
 data_traits.avg.Kin[is.nan(data_traits.avg.Kin)] <- NA
 
 
-# What species are present in the cover data, but do not have any trait information at Kinsella? Cirvul, Collin, Genama, Silvery hairy mustard, Sonarv, Weed 1
-df <- data.frame(Epithey = colnames(abundance_data),
-                 Kinsella = colnames(abundance_data) %in% data_traits.avg.Kin$Epithey)
+# What species are present in the cover data, but do not have any trait information at Kinsella?
+df <- data.frame(Epithey = colnames(abundance_data.2018),
+                 Kinsella = colnames(abundance_data.2018) %in% data_traits.avg.Kin$Epithey)
 as.character(subset(df, Kinsella=="FALSE")$Epithey) # Kinsella has no trait data for these taxa.
 rm(df)
 
 
-# What species are present in the total averages but not the Kinsella averages? Cirvul and Sonarv
-setdiff(data_traits.avg.all$Epithey, data_traits.avg.Kin$Epithey)
+# What species are present in the total averages but not the Kinsella averages? 
 
 # Making rownames into species for all and kinsella avg traits
 rownames(data_traits.avg.all) <- data_traits.avg.all[,"Epithey"]
@@ -337,8 +336,8 @@ View(corr)
 ### match up trait and weight data frames
 traits <- data_traits.avg.Kin # trait data: species are rows and traits are columns
 traits[,c("Vegetative.Height", "Canopy.W2", "Stem.Volume","Epithey")] <- NULL # Drop traits that I don't want in my Fdiv calculation
-weights <- abundance_data # rows are sites and species are columns
-traits <- subset(traits, rownames(traits) %in% colnames(abundance_data)) # Subset traits to only species present in abundance data
+weights <- abundance_data.2018 # rows are sites and species are columns
+traits <- subset(traits, rownames(traits) %in% colnames(abundance_data.2018)) # Subset traits to only species present in abundance data
 traits <- traits[order(match(rownames(traits), colnames(weights))), ] # Make sure the two data frames are in the same order
 
 ### calculate fdiv
@@ -367,7 +366,7 @@ View(CWM.2018)
 #### 2020 Data Prep ####
 # Data prep
 # a) Import trait information
-data_traits <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Data files/Traits_Raw.csv",na.strings=c("NA",""))
+data_traits <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland/Traits_Raw.csv",na.strings=c("NA",""))
 data_traits[,c("SpecimenID", "SppCode", "Collector", "Date.collected", "MicrositeID", "flag", "Notes")] <- NULL # Remove metadata I don't need
 data_traits[,c("Family","Genus","Species")] <- NULL # Remove taxonomy data I don't need (saved separately anyway)
 data_traits[,c("CN.sampleID", "Soil.pH", "pH.Temp", "pH.SoilWeight")] <- NULL # Remove?? extra data that's not really a trait
@@ -391,7 +390,7 @@ data_traits[,c("SA.Leaf1", "SA.Leaf2", "SA.Leaf3", "Biomass.Leaf1", "Biomass.Lea
 data_traits[is.nan(data_traits)] <- NA
 
 #Import abundance data
-abundance_data.2020 <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Data files/AbundanceData2020.csv", na.strings=c("NA",""))
+abundance_data.2020 <- read.csv("~/Documents/GitHub/Trait-profiles-and-functional-diversity-following-disturbance-in-a-mixed-grassland/Trait profiles and functional diversity following disturbance in a mixed grassland/AbundanceData2020.csv", na.strings=c("NA",""))
 abundance_data.2020 <- abundance_data.2020 %>% filter(Community != "N/A")
 abundance_data.2020["Community"] <- NULL
 View(abundance_data.2020)
@@ -438,10 +437,10 @@ data_traits.avg.all <- data_traits.outlier.rm %>%
   as.data.frame() 
 data_traits.avg.all[is.nan(data_traits.avg.all)] <- NA
 
-# Are there any species in the cover data that are NOT in the trait data? Collin, Genama, Silvery.hairy.mustard, Weed.1
+# Are there any species in the cover data that are NOT in the trait data? 
 df <- data.frame(Epithey = colnames(abundance_data.2020),
                  Trait = colnames(abundance_data.2020) %in% data_traits.avg.all$Epithey)
-print(as.character(subset(df, Trait=="FALSE")$Epithey)) # There is no trait data for these taxa.
+print(as.character(subset(df, Trait=="FALSE")$Epithey)) # There is no trait data for these taxa: Collin, Genama, Silvery.hairy.mustard, Weed.1
 
 
 rm(df)
@@ -456,7 +455,7 @@ data_traits.avg.Kin <- data_traits.avg.Kin %>%
   as.data.frame()
 data_traits.avg.Kin[is.nan(data_traits.avg.Kin)] <- NA
 
-# What species are present in the cover data, but do not have any trait information at Kinsella? Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1
+# What species are present in the cover data, but do not have any trait information at Kinsella? 
 df <- data.frame(Epithey = colnames(abundance_data.2020),
                  Kinsella = colnames(abundance_data.2020) %in% data_traits.avg.Kin$Epithey)
 as.character(subset(df, Kinsella=="FALSE")$Epithey) # Kinsella has no trait data for these taxa: Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1
@@ -483,13 +482,12 @@ corr <- corr[["r"]]
 ### match up trait and weight data frames
 traits <- data_traits.avg.Kin # trait data: species are rows and traits are columns
 traits[,c("Vegetative.Height", "Canopy.W2", "Stem.Volume","Epithey")] <- NULL # Drop traits that I don't want in my Fdiv calculation
-weights <- abundance_data # rows are sites and species are columns
-traits <- subset(traits, rownames(traits) %in% colnames(abundance_data)) # Subset traits to only species present in abundance data
+weights <- abundance_data.2020 # rows are sites and species are columns
+traits <- subset(traits, rownames(traits) %in% colnames(abundance_data.2020)) # Subset traits to only species present in abundance data
 traits <- traits[order(match(rownames(traits), colnames(weights))), ] # Make sure the two data frames are in the same order
 
 ### removed species with no kinsella trait data from weights #not working yet
-weights <- select(weights,c(-Cirvul, -Collin, -Genama, -Silvery.hairy.mustard, -Sonarv, -Weed.1))
-weights %>% select (-c(Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1))
+weights <- weights %>% dplyr::select (-c(Cirvul, Collin, Genama, Silvery.hairy.mustard, Sonarv, Weed.1))
 
 ### calculate fdiv
 fdiv_results.2020 <- dbFD(traits, weights, stand.x=TRUE, corr="none") # Calculate diversity. "stand.x=TRUE" standardizes traits to mean 0 and unit variance.
@@ -502,35 +500,323 @@ site <- c("Site2", "Site2", "Site3", "Site3", "Site4", "Site4","Site5", "Site5",
 
 disturbance <- c("ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2")
 
-fric_tansformed <- log(fdiv_results$FRic)
+fric_tansformed <- log(fdiv_results.2020$FRic)
 
-fdiv <- data.frame( # Extract the measurements that I want to use in downstream analyses.
-  no.spp = fdiv_results$nbsp,
-  FRic = fdiv_results$FRic,
+fdiv.2020 <- data.frame( # Extract the measurements that I want to use in downstream analyses.
+  no.spp = fdiv_results.2020$nbsp,
+  FRic = fdiv_results.2020$FRic,
   Fric_Tansformed = fric_tansformed, 
-  FEve = fdiv_results$FEve,
-  FDiv = fdiv_results$FDiv,
-  FDis = fdiv_results$FDis,
-  RaoQ = fdiv_results$RaoQ,
+  FEve = fdiv_results.2020$FEve,
+  FDiv = fdiv_results.2020$FDiv,
+  FDis = fdiv_results.2020$FDis,
+  RaoQ = fdiv_results.2020$RaoQ,
   Disturbance = disturbance, 
   Site = site
 )
-View(fdiv)
+View(fdiv.2020)
 
 
 
 
 ### Take community weighted means
-CWM = fdiv_results$CWM # Extract a separate data frame of community-weighted means
-View(CWM)
+CWM.2020 = fdiv_results.2020$CWM # Extract a separate data frame of community-weighted means
+View(CWM.2020)
 ### Adding site and disturbance level to the CWM traits
 site <- c("Site2", "Site2", "Site3", "Site3", "Site4", "Site4","Site5", "Site5", "Site6", "Site6", "Site7", "Site7", "Site11", "Site11", "Site12", "Site12", "Site14", "Site14", "Site15", "Site15", "Site16", "Site16", "Site17", "Site17")
 disturbance <- c("ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2", "ANR", "NNR2")
 
-Canopy.W1.transformed <- log(CWM$Canopy.W1)
-Root.avgdiam.transformed <- log(CWM$Root.AvgDiam)
+Canopy.W1.transformed <- log(CWM.2020$Canopy.W1)
+Root.avgdiam.transformed <- log(CWM.2020$Root.AvgDiam)
 
-CWM = data.frame(fdiv_results$CWM, Site = site, Disturbance = disturbance, Canopy.W1.Transformed = Canopy.W1.transformed, Root.AvgDiam.Transformed = Root.avgdiam.transformed)
+CWM.2020 = data.frame(fdiv_results.2020$CWM, Site = site, Disturbance = disturbance, Canopy.W1.Transformed = Canopy.W1.transformed, Root.AvgDiam.Transformed = Root.avgdiam.transformed)
+
+#### LMM's ####
+install.packages("lme4")
+install.packages("MASS")
+install.packages("lmerTest")
+install.packages("gridExtra")
+install.packages("egg")
+
+library(lmerTest)
+library(lme4)
+library(MASS)
+library(ggplot2)
+library(gridExtra)
+library(egg)
+
+### 2020 Functional Diversity Indices ###
+
+### LMM FOR NORMALIZED FRIC ###
+FRic.LMM.2020 <- lmer(Fric_Tansformed~Disturbance+(1|Site), data=fdiv.2020)
+summary(FRic.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(FRic.LMM.2020))
+qqline(resid(FRic.LMM.2020))
+
+### LMM FOR FEVE ###
+FEve.LMM.2020 <- lmer(FEve~Disturbance+(1|Site), data=fdiv.2020)
+summary(FEve.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(FEve.LMM.2020))
+qqline(resid(FEve.LMM.2020))
+
+### LMM FOR FDIV ###
+FDiv.LMM.2020 <- lmer(FDiv~Disturbance+(1|Site), data=fdiv.2020)
+summary(FDiv.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(FDiv.LMM.2020))
+qqline(resid(FDiv.LMM.2020))
+
+### LMM FOR RAOQ ###
+RaoQ.LMM.2020 <- lmer(RaoQ~Disturbance+(1|Site), data=fdiv.2020)
+summary(RaoQ.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(RaoQ.LMM.2020))
+qqline(resid(RaoQ.LMM.2020))
+
+### 2020 Community Weighted Mean Traits ###
+
+### LMM FOR MAX HEIGHT ###
+Max.Height.LMM.2020 <- lmer(Max.Height~Disturbance+(1|Site), data=CWM.2020)
+summary(Max.Height.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(Max.Height.LMM.2020))
+qqline(resid(Max.Height.LMM.2020))
+
+### LMM FOR SPECIFIC LEAF AREA ###
+SLA.Leaf.LMM.2020 <- lmer(SLA.Leaf~Disturbance+(1|Site), data=CWM.2020)
+summary(SLA.Leaf.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(SLA.Leaf.LMM.2020))
+qqline(resid(SLA.Leaf.LMM.2020))
+
+### LMM FOR SPECIFIC ROOT LENGTH ###
+SRL.LMM.2020 <- lmer(SRL~Disturbance+(1|Site), data=CWM.2020)
+summary(SRL.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(SRL.LMM.2020))
+qqline(resid(SRL.LMM.2020))
+
+### LMM FOR LEAF NITROGEN CONTENT ###  
+N.shoot.LMM.2020 <- lmer(N.shoot~Disturbance+(1|Site), data=CWM.2020)
+summary(N.shoot.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(N.shoot.LMM.2020))
+qqline(resid(N.shoot.LMM.2020))
+
+### LMM FOR ROOT NITROGEN CONTENT ###  
+N.root.LMM.2020 <- lmer(N.root~Disturbance+(1|Site), data=CWM.2020)
+summary(N.root.LMM.2020)
+# Checking residuals are normally distributed
+qqnorm(resid(N.root.LMM.2020))
+qqline(resid(N.root.LMM.2020))
+
+#### Graphs of the 2020 FD Metrics ####
+
+### Making an FEve data frame
+FEve_ANR <- fdiv.2020$FEve[seq(1, 24, 2)]
+FEve_NNR2 <- fdiv.2020$FEve[seq(2, 24, 2)]
+SD_FEveANR <- sd(FEve_ANR)
+SD_FEveNNR2 <- sd(FEve_NNR2)
+FEve_DataFrame.2020 <- data.frame(AvgFEve = c(mean(FEve_ANR), mean(FEve_NNR2)),
+                                  Subplot = c("Disturbed", "Undisturbed"),
+                                  FEveError = c(SD_FEveANR/sqrt(12), SD_FEveNNR2/sqrt(12)))
+print(FEve_DataFrame.2020)
+### Making an FEve graph
+pEve <- ggplot(FEve_DataFrame.2020, aes(x= Subplot, y= AvgFEve, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgFEve-FEveError, ymax=AvgFEve+FEveError), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(x = "Disturbed vs. undisturbed plot type", y = "Functional evenness") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+pEve
+
+### Making an FDiv data frame
+FDiv_ANR <- fdiv.2020$FDiv[seq(1, 24, 2)]
+FDiv_NNR2 <- fdiv.2020$FDiv[seq(2, 24, 2)]
+SD_FDivANR <- sd(FDiv_ANR)
+SD_FDivNNR2 <- sd(FDiv_NNR2)
+FDiv_DataFrame.2020 <- data.frame(AvgFDiv = c(mean(FDiv_ANR), mean(FDiv_NNR2)),
+                                  Subplot = c("Disturbed", "Undisturbed"),
+                                  FDivError = c(SD_FDivANR/sqrt(12), SD_FDivNNR2/sqrt(12)))
+print(FDiv_DataFrame.2020)
+
+### Making an FDiv graph
+pDiv <- ggplot(FDiv_DataFrame.2020, aes(x= Subplot, y= AvgFDiv, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgFDiv-FDivError, ymax=AvgFDiv+FDivError), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(x = "Disturbed vs. undisturbed plot type", y = "Functional divergence") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+pDiv
+
+### Making an FRic data frame (transformed)
+FRic_ANR <- fdiv.2020$Fric_Tansformed[seq(1, 24, 2)]
+FRic_NNR2 <- fdiv.2020$Fric_Tansformed[seq(2, 24, 2)]
+SD_FRicANR <- sd(FRic_ANR)
+SD_FRicNNR2 <- sd(FRic_NNR2)
+FRic_DataFrame.2020 <- data.frame(AvgFRic = c(mean(FRic_ANR)*-1, mean(FRic_NNR2)*-1),
+                                  Subplot = c("Disturbed", "Undisturbed"),
+                                  FRicError = c(SD_FRicANR/sqrt(12), SD_FRicNNR2/sqrt(12)))
+print(FRic_DataFrame.2020)
+
+### Making an FRic transformed graph
+pRic <- ggplot(FRic_DataFrame.2020, aes(x= Subplot, y= AvgFRic, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgFRic-FRicError, ymax=AvgFRic+FRicError), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(x = "Disturbed vs. undisturbed plot type", y = "Functional richness") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
 
 
+### Making an Rao's Q data frame
+Q_ANR <- fdiv.2020$RaoQ[seq(1, 24, 2)]
+Q_NNR2 <- fdiv.2020$RaoQ[seq(2, 24, 2)]
+SD_QANR <- sd(Q_ANR)
+SD_QNNR2 <- sd(Q_NNR2)
+Q_DataFrame.2020 <- data.frame(AvgQ = c(mean(Q_ANR), mean(Q_NNR2)),
+                               Subplot = c("Disturbed", "Unisturbed"),
+                               QError = c(SD_QANR/sqrt(12), SD_QNNR2/sqrt(12)))
+print(Q_DataFrame.2020)
+
+### Making an Q transformed graph
+pQ<- ggplot(Q_DataFrame.2020, aes(x= Subplot, y= AvgQ, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgQ-QError, ymax=AvgQ+QError), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(x = "Disturbed vs. undisturbed plot type", y = "Rao's quadratic entropy") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+#### Arranging an array of the FD graphs
+ggarrange(pRic + 
+            theme(axis.title.x = element_blank()),
+          pEve + 
+            theme(axis.title.x = element_blank()), 
+          pDiv + 
+            theme(axis.title.x = element_blank()),
+          pQ + 
+            theme(axis.title.x = element_blank()),
+          bottom = "Disturbed vs. undisturbed plot type",
+          nrow = 2)
+
+### Graphs of CWM's (SLA, Leaf N, Root N, height, SRL) ###
+### Making an SLA  data frame
+SLA_ANR <- CWM.2020$SLA.Leaf[seq(1, 24, 2)]
+SLA_NNR2 <- CWM.2020$SLA.Leaf[seq(2, 24, 2)]
+SD_SLA.ANR <- sd(SLA_ANR)
+SD_SLA.NNR2 <- sd(SLA_NNR2)
+SLA_DataFrame.2020 <- data.frame(AvgSLA = c(mean(SLA_ANR), mean(SLA_NNR2)),
+                                 Subplot = c("Disturbed", "Undisturbed"),
+                                 SLA.Error = c(SD_SLA.ANR/sqrt(12), SD_SLA.NNR2/sqrt(12)))
+print(SLA_DataFrame.2020)
+### Making an SLA graph
+pSLA<- ggplot(SLA_DataFrame.2020, aes(x= Subplot, y= AvgSLA, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgSLA-SLA.Error, ymax=AvgSLA+SLA.Error), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(y = "Specific leaf area\n(cm^2/g)") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+
+### Making an Leaf N  data frame
+N.shoot_ANR <- CWM.2020$N.shoot[seq(1, 24, 2)]
+N.shoot_NNR2 <- CWM.2020$N.shoot[seq(2, 24, 2)]
+SD_Nshoot.ANR <- sd(N.shoot_ANR)
+SD_Nshoot.NNR2 <- sd(N.shoot_NNR2)
+Nshoot_DataFrame.2020 <- data.frame(AvgNshoot = c(mean(N.shoot_ANR), mean(N.shoot_NNR2)),
+                                    Subplot = c("Disturbed", "Undisturbed"),
+                                    Nshoot.Error = c(SD_Nshoot.ANR/sqrt(12), SD_Nshoot.NNR2/sqrt(12)))
+print(Nshoot_DataFrame.2020)
+
+### Making an N.shoot graph
+pNshoot<- ggplot(Nshoot_DataFrame.2020, aes(x= Subplot, y= AvgNshoot, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgNshoot-Nshoot.Error, ymax=AvgNshoot+Nshoot.Error), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(y = "Leaf nitrogen\n(%)") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+### Making an Root N  data frame
+N.root_ANR <- CWM.2020$N.root[seq(1, 24, 2)]
+N.root_NNR2 <- CWM.2020$N.root[seq(2, 24, 2)]
+SD_Nroot.ANR <- sd(N.root_ANR)
+SD_Nroot.NNR2 <- sd(N.root_NNR2)
+Nroot_DataFrame.2020 <- data.frame(AvgNroot = c(mean(N.root_ANR), mean(N.root_NNR2)),
+                                   Subplot = c("Disturbed", "Undisturbed"),
+                                   Nroot.Error = c(SD_Nroot.ANR/sqrt(12), SD_Nroot.NNR2/sqrt(12)))
+print(Nroot_DataFrame.2020)
+### Making an N.root graph
+pNroot<- ggplot(Nroot_DataFrame.2020, aes(x= Subplot, y= AvgNroot, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgNroot-Nroot.Error, ymax=AvgNroot+Nroot.Error), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(y = "Root nitrogen\n(%)") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+# making a height data frame
+Height_ANR <- CWM.2020$Max.Height[seq(1, 24, 2)]
+Height_NNR2 <- CWM.2020$Max.Height[seq(2, 24, 2)]
+SD_Height.ANR <- sd(N.root_ANR)
+SD_Height.NNR2 <- sd(N.root_NNR2)
+Height_DataFrame.2020 <- data.frame(AvgHeight = c(mean(Height_ANR), mean(Height_NNR2)),
+                                    Subplot = c("Disturbed", "Undisturbed"),
+                                    Height.Error = c(SD_Height.ANR/sqrt(12), SD_Height.NNR2/sqrt(12)))
+print(Height_DataFrame.2020)
+### Making a height graph
+pHeight <- ggplot(Height_DataFrame.2020, aes(x= Subplot, y= AvgHeight, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgHeight-Height.Error, ymax=AvgHeight+Height.Error), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(y = "Max height\n(cm)") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+
+# making a specific root length data frame
+SRL_ANR <- CWM.2020$SRL[seq(1, 24, 2)]
+SRL_NNR2 <- CWM.2020$SRL[seq(2, 24, 2)]
+SD_SRL.ANR <- sd(SRL_ANR)
+SD_SRL.NNR2 <- sd(SRL_NNR2)
+SRL_DataFrame.2020 <- data.frame(AvgSRL = c(mean(SRL_ANR), mean(SRL_NNR2)),
+                                 Subplot = c("Disturbed", "Undisturbed"),
+                                 SRL.Error = c(SD_SRL.ANR/sqrt(12), SD_SRL.NNR2/sqrt(12)))
+print(SRL_DataFrame.2020)
+### Making an SRL graph
+pSRL<- ggplot(SRL_DataFrame.2020, aes(x= Subplot, y= AvgSRL, fill = Subplot)) +
+  geom_bar(stat = "identity", width=0.9, position=position_dodge()) +
+  geom_errorbar(aes(x=Subplot, ymin=AvgSRL-SRL.Error, ymax=AvgSRL+SRL.Error), width=0.3, position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("gray28", "gray")) +
+  labs(y = "Specific root length\n(cm/g)") +
+  theme_classic() + 
+  theme(axis.text = element_text(color = "black"))+
+  theme(legend.position = "none")
+
+#### Arranging an array of the trait graphs
+ggarrange(pSRL + 
+            theme(axis.title.x = element_blank()),
+          pHeight + 
+            theme(axis.title.x = element_blank()), 
+          pSLA + 
+            theme(axis.title.x = element_blank()),
+          pNroot + 
+            theme(axis.title.x = element_blank()),
+          pNshoot + 
+            theme(axis.title.x = element_blank()),
+          bottom = "Disturbed vs. undisturbed plot type",
+          nrow = 2)
 

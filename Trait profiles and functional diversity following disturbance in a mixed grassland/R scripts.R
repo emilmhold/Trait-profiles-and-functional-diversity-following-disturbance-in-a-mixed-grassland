@@ -127,7 +127,7 @@ Avg_ANR_R2020 <- mean(c(ANR2_R, ANR3_R, ANR4_R, ANR5_R, ANR6_R, ANR7_R, ANR11_R,
 
 StDev_ANR_R2020 <- sd(c(ANR2_R, ANR3_R, ANR4_R, ANR5_R, ANR6_R, ANR7_R, ANR11_R, ANR12_R, ANR14_R, ANR15_R, ANR16_R, ANR17_R))
 
-### trying to extract richness for each nnr2 subplot
+### extract richness for each nnr2 subplot
 
 NNR2_R <- specnumber(community_2020$NNR2..Undist..2)
 NNR3_R <- specnumber(community_2020$NNR2..Undist..3)
