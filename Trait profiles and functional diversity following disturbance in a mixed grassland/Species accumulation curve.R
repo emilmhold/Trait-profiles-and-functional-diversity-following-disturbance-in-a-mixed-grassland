@@ -14,4 +14,4 @@ View(community_2020)
 #Default specaccum
 sp1 <- specaccum(community_2020)
 
-plot(sp1, xlab = "Plot", ylab = "Species Richness")
+plot(sp1, xlab = "Plot", ylab = "Expected mean species richness")

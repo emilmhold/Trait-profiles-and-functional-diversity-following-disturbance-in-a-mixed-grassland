@@ -235,7 +235,7 @@ qqline(resid(SLA.Leaf.LM.2020))
 # Checking normality of distribution
 ks.test(resid(SLA.Leaf.LM.2020),"pnorm",mean=mean(resid(SLA.Leaf.LM.2020)),sd=sd(resid(SLA.Leaf.LM.2020)))
 
-### RUNNING LM FOR SPECIFIC ROOT LENGTH ###
+### LM FOR SPECIFIC ROOT LENGTH ###
 SRL.LM.2020 <- lm(SRL~Disturbance, data=CWM.2020)
 summary(SRL.LM.2020)
 # Checking residuals are normally distributed
