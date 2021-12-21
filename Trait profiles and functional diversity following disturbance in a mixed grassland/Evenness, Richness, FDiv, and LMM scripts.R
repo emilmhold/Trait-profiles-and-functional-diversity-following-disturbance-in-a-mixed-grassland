@@ -356,7 +356,7 @@ fdiv.2018 <- data.frame( # Extract the measurements that I want to use in downst
   FDis = fdiv_results.2018$FDis,
   RaoQ = fdiv_results.2018$RaoQ
 )
-view(fdiv.2018)
+View(fdiv.2018)
 
 
 ### Take community weighted means
